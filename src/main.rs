@@ -1,22 +1,25 @@
+use std::ops::Deref;
+
+struct MyBox<T>(T);
+
+impl<T> MyBox<T> {
+    fn new(x: T) -> MyBox<T> {
+        MyBox(x)
+    }
+}
+
+impl<T> Deref for MyBox<T> {
+    type Target = T;
+
+    fn deref(&self) -> &T {
+        &self.0
+    }
+}
+
 fn main() {
-    external::handler()
-}
+    let x = 5;
+    let y = MyBox::new(x);
 
-fn on_s() {
-    println!("")
-}
-fn on_f() {}
-
-mod external {
-    pub fn handler(on_s: fn(), on_f: fn()) {
-        let res = do_h();
-        if res == true {
-            on_s()
-        } else {
-            on_f()
-        }
-    }
-    fn do_h() -> bool {
-        false
-    }
+    assert_eq!(5, x);
+    assert_eq!(5, *y);
 }
