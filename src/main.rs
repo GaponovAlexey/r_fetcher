@@ -11,15 +11,20 @@ impl<T> MyBox<T> {
 impl<T> Deref for MyBox<T> {
     type Target = T;
 
-    fn deref(&self) -> &T {
+    fn deref(&self) -> &Self::Target {
         &self.0
     }
 }
 
 fn main() {
-    let x = 5;
-    let y = MyBox::new(x);
+    let n = "said_man".to_string();
+    let x = "4epa".to_string();
+    let y = MyBox::new(&n);
+    *n = &x;
+    hello(&y);
+    hello(&n)
+}
 
-    assert_eq!(5, x);
-    assert_eq!(5, *y);
+fn hello(name: &str) {
+    println!("{:?}", name)
 }
