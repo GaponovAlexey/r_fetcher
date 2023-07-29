@@ -1,30 +1,24 @@
-use std::ops::Deref;
+use std::cell::RefCell;
+use std::rc::Rc;
 
-struct MyBox<T>(T);
-
-impl<T> MyBox<T> {
-    fn new(x: T) -> MyBox<T> {
-        MyBox(x)
-    }
+#[derive(Debug)]
+enum BitBlock {
+    Block(i32, RefCell<Rc<BitBlock>>),
+    Genesis,
 }
 
-impl<T> Deref for MyBox<T> {
-    type Target = T;
+use BitBlock::{ Block, Genesis };
 
-    fn deref(&self) -> &Self::Target {
-        &self.0
+impl BitBlock {
+    fn get_prev_block(&self) -> Option<&RefCell<Rc<BitBlock>>> {
+        match self {
+            Self::Block(_, i) => Some(i),
+            Genesis => None,
+        }
     }
 }
 
 fn main() {
-    let n = "said_man".to_string();
-    let x = "4epa".to_string();
-    let y = MyBox::new(&n);
-    *n = &x;
-    hello(&y);
-    hello(&n)
-}
-
-fn hello(name: &str) {
-    println!("{:?}", name)
+    let bl1 = Rc::new(Block(1, RefCell::new(Rc::new(BitBlock::Genesis))));
+    println!("{:?}", Rc::strong_count(&bl1))
 }
