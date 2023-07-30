@@ -1,0 +1,7 @@
+{
+  "rust-analyzer.linkedProjects": [
+    ".\\deblib\\Cargo.toml",
+    ".\\deblib\\Cargo.toml",
+    ".\\Cargo.toml"
+  ]
+}
