@@ -1,9 +1,14 @@
-mod lib;
+// use r_fetcher::from_lib::*;
 
-use rand::Rng;
+use r_fetcher::{ ex::Ex, testsend::Testsend };
 
 fn main() {
-    lib::development::dev::add_task();
-    println!("r : {:?}", rand::thread_rng().gen_range(1..100));
-    println!("HI")
+    let pr = Ex::new();
+    println!("{:?}", pr.mess);
+
+    let n1 = Ex::change_name("Serg");
+    println!("{:?}", n1);
+    let r1 = Testsend("str1");
+    println!("{:?}", r1.trim());
+    println!("HI");
 }
