@@ -1,14 +1,37 @@
-// use r_fetcher::from_lib::*;
-
-use r_fetcher::{ dev::tr::ex::Ex, testsend::Testsend };
+use std::{ sync::mpsc::{ Receiver, Sender, self }, thread, time::Duration };
 
 fn main() {
-    let pr = Ex::new();
-    println!("{:?}", pr.mess);
+    let (sender, receiver): (Sender<String>, Receiver<String>) = mpsc::channel();
 
-    let n1 = Ex::change_name("Serg");
-    println!("{:?}", n1);
-    let r1 = Testsend("str1");
-    println!("{:?}", r1.trim());
-    println!("HI");
+    let sed_clone = sender.clone();
+    thread::spawn(move || {
+        let vals = vec![
+            "1".to_string(),
+            "2".to_string(),
+            "3".to_string(),
+            "4".to_string(),
+            "5".to_string()
+        ];
+        for val in vals {
+            sender.send(val).expect("err in val");
+            thread::sleep(Duration::from_secs(1));
+        }
+    });
+    thread::spawn(move || {
+        let vals = vec![
+            "1".to_string(),
+            "2".to_string(),
+            "3".to_string(),
+            "4".to_string(),
+            "5".to_string()
+        ];
+        for val in vals {
+            sed_clone.send(val).expect("err in val");
+            thread::sleep(Duration::from_secs(1));
+        }
+    });
+
+    for rec in receiver {
+        println!("{:?}", rec);
+    }
 }
