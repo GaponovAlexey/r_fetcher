@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 license = "MIT"
 description = "Test deploy pakage"
-authors = ["Alexei.gaponov@gmail.com"]
+authors = ["alexei.gaponov@gmail.com"]
 
 
 [dependencies]
