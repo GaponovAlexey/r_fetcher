@@ -2,6 +2,10 @@
 name = "r_fetcher"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+description = "Test deploy pakage"
+authors = ["Alexei.gaponov@gmail.com"]
+
 
 [dependencies]
 rand = "0.8.5"
