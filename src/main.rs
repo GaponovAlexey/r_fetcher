@@ -1,8 +1,13 @@
-use r_fetcher::*;
-use futures::executor::block_on;
+use gotham::state::State;
 
-fn main() {
-    // block_on(eat_play());
-    block_on(eat_play_concurrently())
-    // task_print()
+const HELLO_WORLD: &str = "Hello World!";
+
+pub fn say_hello(state: State) -> (State, &'static str) {
+    (state, HELLO_WORLD)
+}
+
+pub fn main() {
+    let addr = "127.0.0.1:3000";
+    println!("Listening for requests at http://{}", addr);
+    gotham::start(addr, || Ok(say_hello)).expect("err");
 }
