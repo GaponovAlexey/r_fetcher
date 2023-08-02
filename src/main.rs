@@ -1,37 +1,39 @@
-use std::{ sync::mpsc::{ Receiver, Sender, self }, thread, time::Duration };
+use std::sync::{ Arc, RwLock };
+use std::thread;
 
 fn main() {
-    let (sender, receiver): (Sender<String>, Receiver<String>) = mpsc::channel();
+    let data = Arc::new(RwLock::new(0));
 
-    let sed_clone = sender.clone();
-    thread::spawn(move || {
-        let vals = vec![
-            "1".to_string(),
-            "2".to_string(),
-            "3".to_string(),
-            "4".to_string(),
-            "5".to_string()
-        ];
-        for val in vals {
-            sender.send(val).expect("err in val");
-            thread::sleep(Duration::from_secs(1));
-        }
-    });
-    thread::spawn(move || {
-        let vals = vec![
-            "1".to_string(),
-            "2".to_string(),
-            "3".to_string(),
-            "4".to_string(),
-            "5".to_string()
-        ];
-        for val in vals {
-            sed_clone.send(val).expect("err in val");
-            thread::sleep(Duration::from_secs(1));
-        }
-    });
+    let mut handles = vec![];
 
-    for rec in receiver {
-        println!("{:?}", rec);
+    // Спавним 10 потоков, которые увеличивают значение
+    for _ in 0..10 {
+        let data = Arc::clone(&data);
+
+        let handle = thread::spawn(move || {
+            let mut num = data.write().unwrap();
+            *num += 10;
+        });
+
+        handles.push(handle);
+    }
+
+    // Спавним 10 потоков, которые читают значение
+    for _ in 0..10 {
+        let data = Arc::clone(&data);
+
+        let handle = thread::spawn(move || {
+            let num = data.read().unwrap();
+
+            println!("r: {}", *num);
+        });
+
+        handles.push(handle);
+    }
+
+    // Дожидаемся завершения всех потоков
+    for handle in handles {
+        println!("{:?}", handle);
+        handle.join().unwrap();
     }
 }
