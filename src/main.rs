@@ -1,13 +1,14 @@
-use gotham::state::State;
+use r_fetcher::some_mod::*;
+fn main() {
+    let d = Dev::new("Rust".to_string());
+    let mut project = Project {
+        members: Vec::new(),
+    };
 
-const HELLO_WORLD: &str = "Hello World!";
-
-pub fn say_hello(state: State) -> (State, &'static str) {
-    (state, HELLO_WORLD)
-}
-
-pub fn main() {
-    let addr = "127.0.0.1:3000";
-    println!("Listening for requests at http://{}", addr);
-    gotham::start(addr, || Ok(say_hello)).expect("err");
+    let qa = Qa {};
+    project.members.push(Box::new(d));
+    project.members.push(Box::new(qa));
+    for i in project.members.iter() {
+        i.do_task();
+    }
 }

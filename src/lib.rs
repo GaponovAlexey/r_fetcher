@@ -1,33 +1,48 @@
-use std::{ thread::{ self, JoinHandle }, time::Duration };
-use futures::join;
+pub mod some_mod {
+    use chrono::Utc;
 
-pub async fn task_print() {
-    println!("print from future")
-}
-
-pub async fn eat() {
-    for i in 0..5 {
-        println!("eat -> = {:?}", thread::current().id());
-        async_std::task::sleep(Duration::from_millis(1000)).await;
-        println!("eat -> = {:?}", thread::current().id());
+    pub struct Project {
+        pub members: Vec<Box<dyn TeamMembers>>,
     }
-}
-pub async fn play() {
-    for i in 0..5 {
-        println!("play -> = {:?}", thread::current().id());
-        async_std::task::sleep(Duration::from_millis(1000)).await;
-        println!("play -> = {:?}", thread::current().id());
+    pub trait TeamMembers {
+        fn do_task(&self) {
+            println!("do task = {:?}", Utc::now())
+        }
     }
-}
-pub async fn eat_play() {
-    println!("Task eat and play");
-    eat().await;
-    play().await;
-}
 
-pub async fn eat_play_concurrently() {
-    println!("from Concurrently");
-    let f1 = eat();
-    let f2 = play();
-    join!(f1, f2);
+    pub struct Qa {}
+
+    impl TeamMembers for Qa {
+        fn do_task(&self) {
+            println!("do qa task = {:?}", Utc::now())
+        }
+    }
+
+    #[derive(Debug)]
+    pub struct Dev {
+        lang: String,
+        exp: i32,
+        tasks: Vec<String>,
+    }
+
+    impl TeamMembers for Dev {
+        fn do_task(&self) {
+            println!("do dev task = {:?}", Utc::now())
+        }
+    }
+
+    impl Dev {
+        pub fn new(lang: String) -> Dev {
+            Dev { lang, exp: 2, tasks: Vec::new() }
+        }
+        pub fn change_lang(&mut self, new_lang: String) {
+            self.lang = new_lang.to_string();
+        }
+        pub fn list_task(&self) -> &Vec<String> {
+            &self.tasks
+        }
+        pub fn add_task(&mut self, task: String) {
+            self.tasks.push(task);
+        }
+    }
 }
