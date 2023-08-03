@@ -11,7 +11,7 @@ pub mod some_mod {
     }
 
     pub struct Qa {}
-
+ 
     impl TeamMembers for Qa {
         fn do_task(&self) {
             println!("do qa task = {:?}", Utc::now())
