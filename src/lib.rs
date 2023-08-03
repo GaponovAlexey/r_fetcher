@@ -1,48 +1,33 @@
-pub mod some_mod {
-    use chrono::Utc;
+pub mod postal {
+    use once_cell::sync::Lazy;
+    
+    static C1: Lazy<String> = Lazy::new(|| "hi from constant".to_string());
 
-    pub struct Project {
-        pub members: Vec<Box<dyn TeamMembers>>,
-    }
-    pub trait TeamMembers {
-        fn do_task(&self) {
-            println!("do task = {:?}", Utc::now())
-        }
+    pub struct Contract {
+        pub pr: Vec<Box<dyn Project>>,
     }
 
-    pub struct Qa {}
- 
-    impl TeamMembers for Qa {
-        fn do_task(&self) {
-            println!("do qa task = {:?}", Utc::now())
+    pub trait Project {
+        fn one_p(&self) {
+            println!("from Project");
         }
     }
 
-    #[derive(Debug)]
-    pub struct Dev {
-        lang: String,
-        exp: i32,
-        tasks: Vec<String>,
-    }
+    pub struct One {}
+    pub struct Two {}
+    pub struct Three {}
 
-    impl TeamMembers for Dev {
-        fn do_task(&self) {
-            println!("do dev task = {:?}", Utc::now())
+    impl Project for One {
+        fn one_p(&self) {
+            println!("from one");
+            println!("time### :{:?}", C1.to_string())
         }
     }
-
-    impl Dev {
-        pub fn new(lang: String) -> Dev {
-            Dev { lang, exp: 2, tasks: Vec::new() }
-        }
-        pub fn change_lang(&mut self, new_lang: String) {
-            self.lang = new_lang.to_string();
-        }
-        pub fn list_task(&self) -> &Vec<String> {
-            &self.tasks
-        }
-        pub fn add_task(&mut self, task: String) {
-            self.tasks.push(task);
+    impl Project for Two {
+        fn one_p(&self) {
+            println!("from two");
+            println!("const :{:?}", C1.to_string())
         }
     }
+    impl Project for Three {}
 }
