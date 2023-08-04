@@ -9,6 +9,8 @@ authors = ["alexei.gaponov@gmail.com"]
 
 [dependencies]
 rand = "0.8.4"
+serde_json = "1.0.104" 
+serde = { version = "1.0.181", features = ["derive"] }
 
 [profile.dev]
 opt-level = 0
